@@ -1,0 +1,6 @@
+{
+  "name": "AirFryFit - Recetas Airfryer & Menú Semanal",
+  "description": "App de recetas saludables en Airfryer para perder peso, planificador semanal, lista de compra inteligente, gráficas de progreso de peso, 3 bonus exclusivos y comunidad VIP Telegram.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
