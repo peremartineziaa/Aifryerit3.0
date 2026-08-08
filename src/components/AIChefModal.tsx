@@ -10,7 +10,8 @@ import {
   ChevronRight, 
   Check, 
   ArrowLeft,
-  Utensils
+  Utensils,
+  Lock
 } from 'lucide-react';
 import { Recipe } from '../types';
 import { RECIPES_DATA } from '../data/recipes';
@@ -21,6 +22,10 @@ interface AIChefModalProps {
   onAddCustomRecipe: (recipe: Recipe) => void;
   onCookRecipe: (recipe: Recipe) => void;
   existingRecipes?: Recipe[];
+  userRole?: 'admin' | 'plan_29' | 'free';
+  aiChefUsageCount?: number;
+  onIncrementAiChefUsage?: () => void;
+  onOpenCheckout?: () => void;
 }
 
 export const AIChefModal: React.FC<AIChefModalProps> = ({
@@ -29,8 +34,12 @@ export const AIChefModal: React.FC<AIChefModalProps> = ({
   onAddCustomRecipe,
   onCookRecipe,
   existingRecipes = RECIPES_DATA,
+  userRole = 'free',
+  aiChefUsageCount = 0,
+  onIncrementAiChefUsage,
+  onOpenCheckout,
 }) => {
-  // Guided flow steps: 1 = Ingredientes, 2 = Deseo/Estilo, 3 = Tiempo, 4 = Resultado (3 Recetas)
+  // Guided flow steps: 1 = Ingredientes, 2 = Deseo/Estilo, 3 = Tiempo, 4 = Resultado, 5 = Límite Demo Alcanzado
   const [step, setStep] = useState<number>(1);
 
   // User Selections
@@ -44,6 +53,8 @@ export const AIChefModal: React.FC<AIChefModalProps> = ({
   const [matchedRecipes, setMatchedRecipes] = useState<Recipe[]>([]);
 
   if (!isOpen) return null;
+
+  const isDemoMode = userRole === 'free';
 
   const INGREDIENT_OPTIONS = [
     { label: '🍗 Pollo', key: 'pollo' },
@@ -76,8 +87,17 @@ export const AIChefModal: React.FC<AIChefModalProps> = ({
   };
 
   const handleGenerateResults = async () => {
+    // Check Demo Mode limit
+    if (isDemoMode && aiChefUsageCount >= 2) {
+      setStep(5);
+      return;
+    }
+
     setLoading(true);
     setStep(4);
+    if (isDemoMode && onIncrementAiChefUsage) {
+      onIncrementAiChefUsage();
+    }
 
     try {
       const allIngs = [...selectedIngredients, customIngredients].filter(Boolean).join(', ');
@@ -169,6 +189,11 @@ export const AIChefModal: React.FC<AIChefModalProps> = ({
                 <span className="text-[10px] font-extrabold uppercase tracking-wider bg-green-500/20 text-green-400 px-2.5 py-0.5 rounded-full border border-green-500/30">
                   CONVERSACIÓN GUIADA
                 </span>
+                {isDemoMode && (
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                    DEMO: {aiChefUsageCount}/2 COMIDAS USADAS
+                  </span>
+                )}
               </div>
               <h2 className="text-lg font-black text-white">
                 Chef IA AirFryFit
@@ -466,6 +491,55 @@ export const AIChefModal: React.FC<AIChefModalProps> = ({
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* PASO 5: LÍMITE DEMO ALCANZADO (MAX 2 COMIDAS) */}
+          {step === 5 && (
+            <div className="space-y-6 text-center py-4 animate-fade-in">
+              <div className="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto shadow-inner">
+                <Lock className="w-8 h-8" />
+              </div>
+
+              <div className="space-y-2 max-w-md mx-auto">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 px-3 py-1 rounded-full border border-amber-200">
+                  LÍMITE DEMO ALCANZADO (2/2 COMIDAS)
+                </span>
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                  ¡Has completado tus 2 pruebas con el Chef IA!
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  En la versión Demo solo se permiten <strong>2 pruebas del Chef IA</strong>. Para usar el Chef IA sin límites, adaptar todas tus comidas en Airfryer y acceder a las 80+ recetas VIP, desbloquea el acceso completo.
+                </p>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 max-w-md mx-auto text-left space-y-3">
+                <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                  Acceso Completo AirFryFit (29 €):
+                </h4>
+                <ul className="text-xs text-slate-600 space-y-1.5 font-medium">
+                  <li>✅ Chef IA Ilimitado para cualquier ingrediente</li>
+                  <li>✅ 80+ Recetas completas con macros e instrucciones</li>
+                  <li>✅ Planificador Semanal y Lista de la Compra</li>
+                  <li>✅ Regalo: Grupo Privado de Telegram de por vida</li>
+                </ul>
+              </div>
+
+              <div className="space-y-3 max-w-md mx-auto pt-2">
+                <button
+                  onClick={() => {
+                    onClose();
+                    if (onOpenCheckout) onOpenCheckout();
+                  }}
+                  className="w-full py-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-black text-sm shadow-lg shadow-green-500/25 transition-all scale-102 hover:scale-105"
+                >
+                  <span>Desbloquear Chef IA Ilimitado (29 €)</span>
+                </button>
+
+                <p className="text-[11px] text-slate-400">
+                  ¿Ya tienes usuario? Inicia sesión como <strong>Lidia (300177)</strong> en el menú superior para tener acceso ilimitado.
+                </p>
+              </div>
             </div>
           )}
 

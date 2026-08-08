@@ -5,6 +5,17 @@ export type RecipeCategory =
   | 'postres' 
   | 'snacks';
 
+export type ShoppingCategory = 
+  | 'carnes'
+  | 'pescados'
+  | 'lacteos'
+  | 'legumbres'
+  | 'verduras'
+  | 'panaderia'
+  | 'despensa'
+  | 'especias'
+  | 'frutas';
+
 export interface Recipe {
   id: string;
   title: string;
@@ -26,7 +37,7 @@ export interface Recipe {
     name: string;
     amount: number;
     unit: string;
-    category: 'verduras' | 'carnes' | 'pescados' | 'lacteos' | 'despensa' | 'frutas';
+    category: ShoppingCategory;
   }[];
   instructions: string[];
   airfryerTip: string;
@@ -53,9 +64,9 @@ export interface WeeklyPlan {
 export interface ShoppingItem {
   id: string;
   name: string;
-  amount: number;
-  unit: string;
-  category: 'verduras' | 'carnes' | 'pescados' | 'lacteos' | 'despensa' | 'frutas';
+  amount?: number;
+  unit?: string;
+  category: ShoppingCategory;
   checked: boolean;
   recipeSource?: string;
   isManual?: boolean;
@@ -102,3 +113,12 @@ export interface BonusInfo {
   unlocked: boolean;
   recipeCount?: number;
 }
+
+export interface RegisteredUser {
+  email: string;
+  password: string;
+  tempPassword?: string;
+  mustChangePassword: boolean;
+  createdAt: string;
+}
+

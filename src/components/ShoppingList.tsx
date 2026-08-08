@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ShoppingItem } from '../types';
-import { AIRFRYER_PANTRY_ESSENTIALS } from '../data/sampleData';
+import { ShoppingItem, ShoppingCategory } from '../types';
+import { AIRFRYER_PANTRY_ESSENTIALS, KIT_OFFICIAL_SHOPPING_LIST } from '../data/sampleData';
 import { 
   ShoppingCart, 
   CheckSquare, 
@@ -12,31 +12,36 @@ import {
   Sparkles, 
   Info, 
   Lightbulb,
-  ExternalLink
+  RotateCcw
 } from 'lucide-react';
 
 interface ShoppingListProps {
   items: ShoppingItem[];
   setItems: React.Dispatch<React.SetStateAction<ShoppingItem[]>>;
   onClearList: () => void;
+  onLoadOfficialKitList?: () => void;
 }
 
-const CATEGORY_META = {
-  verduras: { label: '🥬 Verduras & hortalizas', color: 'emerald' },
-  carnes: { label: '🥩 Carnes & Aves magras', color: 'rose' },
-  pescados: { label: '🐟 Pescados & Mariscos', color: 'sky' },
-  lacteos: { label: '🥛 Lácteos, Huevos & Claras', color: 'amber' },
-  despensa: { label: '🥫 Despensa & Especias Airfryer', color: 'orange' },
-  frutas: { label: '🍎 Frutas frescas', color: 'purple' },
+const CATEGORY_META: Record<ShoppingCategory, { label: string; color: string }> = {
+  carnes: { label: '🥩 CARNES Y AVES', color: 'rose' },
+  pescados: { label: '🐟 PESCADOS Y MARISCOS', color: 'sky' },
+  lacteos: { label: '🥚 HUEVOS Y LÁCTEOS', color: 'amber' },
+  legumbres: { label: '🫘 LEGUMBRES Y OTROS FRESCOS', color: 'emerald' },
+  verduras: { label: '🥦 FRUTAS Y VERDURAS', color: 'green' },
+  frutas: { label: '🍎 FRUTAS FRESCAS', color: 'purple' },
+  panaderia: { label: '🌾 PANADERÍA Y CEREALES', color: 'yellow' },
+  despensa: { label: '🧂 DESPENSA Y CONDIMENTOS', color: 'orange' },
+  especias: { label: '🌿 ESPECIAS BÁSICAS', color: 'teal' },
 };
 
 export const ShoppingList: React.FC<ShoppingListProps> = ({
   items,
   setItems,
   onClearList,
+  onLoadOfficialKitList,
 }) => {
   const [newItemName, setNewItemName] = useState('');
-  const [newItemCategory, setNewItemCategory] = useState<ShoppingItem['category']>('despensa');
+  const [newItemCategory, setNewItemCategory] = useState<ShoppingCategory>('despensa');
   const [copiedText, setCopiedText] = useState(false);
 
   const toggleItem = (id: string) => {
@@ -56,8 +61,6 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
     const item: ShoppingItem = {
       id: 'manual_' + Date.now(),
       name: newItemName.trim(),
-      amount: 1,
-      unit: 'unidad',
       category: newItemCategory,
       checked: false,
       isManual: true,
@@ -67,25 +70,43 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
     setNewItemName('');
   };
 
+  const handleLoadOfficialKit = () => {
+    if (onLoadOfficialKitList) {
+      onLoadOfficialKitList();
+    } else {
+      setItems(KIT_OFFICIAL_SHOPPING_LIST);
+    }
+  };
+
   const completedCount = items.filter((i) => i.checked).length;
   const progressPct = items.length > 0 ? Math.round((completedCount / items.length) * 100) : 0;
 
-  // Group items by category
-  const categories = Object.keys(CATEGORY_META) as (keyof typeof CATEGORY_META)[];
+  // Group items by category in the exact order specified
+  const categoryOrder: ShoppingCategory[] = [
+    'carnes',
+    'pescados',
+    'lacteos',
+    'legumbres',
+    'verduras',
+    'frutas',
+    'panaderia',
+    'despensa',
+    'especias',
+  ];
 
   const handleShareWhatsApp = () => {
     const listText = items
-      .map((i) => `${i.checked ? '✅' : '☐'} ${i.name} (${i.amount} ${i.unit})`)
+      .map((i) => `${i.checked ? '✅' : '☐'} ${i.name}${i.amount && i.unit ? ` (${i.amount} ${i.unit})` : ''}`)
       .join('\n');
 
-    const fullMsg = `🛒 *Mi Lista de la Compra AirFryFit*:\n\n${listText}\n\nApp AirFryFit - Recetas & Menús Airfryer`;
+    const fullMsg = `🛒 *LISTA INTELIGENTE DE LA COMPRA - KIT DE INICIO AIRFRYER FIT*:\n\n${listText}\n\nApp AirFryFit - 21 Cenas y 10 Postres`;
     const url = `https://wa.me/?text=${encodeURIComponent(fullMsg)}`;
     window.open(url, '_blank');
   };
 
   const handleCopyClipboard = () => {
     const listText = items
-      .map((i) => `${i.checked ? '✅' : '☐'} ${i.name} (${i.amount} ${i.unit})`)
+      .map((i) => `${i.checked ? '✅' : '☐'} ${i.name}${i.amount && i.unit ? ` (${i.amount} ${i.unit})` : ''}`)
       .join('\n');
     navigator.clipboard?.writeText?.(listText);
     setCopiedText(true);
@@ -101,32 +122,41 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>BONUS 3: LISTA INTELIGENTE DE LA COMPRA</span>
+              <span>KIT DE INICIO • LISTA INTELIGENTE DE LA COMPRA</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Lista de la Compra Automática
+              Lista Inteligente de la Compra
             </h1>
             <p className="text-slate-500 text-sm max-w-xl leading-relaxed">
-              Generada a partir de tu menú semanal. Organizada por pasillos del supermercado para comprar sin rodeos.
+              Todo lo que necesitas para las <strong>21 cenas</strong> y los <strong>10 postres</strong> de tu Kit, organizado por secciones de supermercado.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <button
+              onClick={handleLoadOfficialKit}
+              className="px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition-all"
+              title="Cargar la lista completa de las 21 cenas y 10 postres"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Cargar Lista Oficial Kit (21 Cenas + 10 Postres)</span>
+            </button>
+
+            <button
               onClick={handleShareWhatsApp}
               disabled={items.length === 0}
-              className="px-5 py-3 rounded-full bg-green-500 hover:bg-green-600 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md shadow-green-500/20 transition-all"
+              className="px-5 py-3 rounded-full bg-green-500 hover:bg-green-600 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md shadow-green-500/20 transition-all disabled:opacity-50"
             >
               <Share2 className="w-4 h-4" />
-              <span>Enviar a WhatsApp</span>
+              <span>WhatsApp</span>
             </button>
 
             <button
               onClick={handleCopyClipboard}
               disabled={items.length === 0}
-              className="px-5 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 transition-colors"
+              className="px-5 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 transition-colors disabled:opacity-50"
             >
-              {copiedText ? '¡Copiada!' : 'Copiar Texto'}
+              {copiedText ? '¡Copiada!' : 'Copiar'}
             </button>
 
             {items.length > 0 && (
@@ -171,12 +201,12 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
         />
         <select
           value={newItemCategory}
-          onChange={(e) => setNewItemCategory(e.target.value as any)}
+          onChange={(e) => setNewItemCategory(e.target.value as ShoppingCategory)}
           className="bg-slate-50 border border-slate-200/80 rounded-full px-4 py-2.5 text-xs text-slate-700 font-semibold focus:outline-none"
         >
-          {categories.map((c) => (
+          {categoryOrder.map((c) => (
             <option key={c} value={c}>
-              {CATEGORY_META[c].label}
+              {CATEGORY_META[c]?.label || c}
             </option>
           ))}
         </select>
@@ -197,16 +227,23 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
           </div>
           <h3 className="text-lg font-bold text-slate-900">Tu lista está vacía</h3>
           <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-            Ve a la pestaña <strong>"Menú Semanal"</strong> y pulsa en <strong>"Generar Lista de Compra"</strong> para extraer automáticamente los ingredientes necesarios.
+            Pulsa en <strong>"Cargar Lista Oficial Kit"</strong> para ver todos los ingredientes de las 21 cenas y 10 postres, o genera tu lista desde la pestaña <strong>"Menú Semanal"</strong>.
           </p>
+          <button
+            onClick={handleLoadOfficialKit}
+            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-full inline-flex items-center gap-2 transition-colors shadow-sm"
+          >
+            <RotateCcw className="w-4 h-4" />
+            <span>Cargar Lista del Kit de Inicio</span>
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((catKey) => {
+          {categoryOrder.map((catKey) => {
             const catItems = items.filter((i) => i.category === catKey);
             if (catItems.length === 0) return null;
 
-            const meta = CATEGORY_META[catKey];
+            const meta = CATEGORY_META[catKey] || { label: catKey, color: 'emerald' };
 
             return (
               <div
@@ -214,7 +251,7 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
                 className="bg-white border border-slate-100/90 rounded-[28px] p-6 space-y-3 shadow-sm"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <h3 className="font-extrabold text-slate-900 text-sm">
+                  <h3 className="font-extrabold text-slate-900 text-xs sm:text-sm tracking-tight">
                     {meta.label}
                   </h3>
                   <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">
@@ -243,9 +280,11 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="text-[11px] font-bold text-orange-700 bg-orange-100 px-2.5 py-0.5 rounded-full">
-                          {item.amount} {item.unit}
-                        </span>
+                        {item.amount && item.unit ? (
+                          <span className="text-[11px] font-bold text-orange-700 bg-orange-100 px-2.5 py-0.5 rounded-full">
+                            {item.amount} {item.unit}
+                          </span>
+                        ) : null}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -264,6 +303,14 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
           })}
         </div>
       )}
+
+      {/* Official Tip Box from PDF */}
+      <div className="bg-amber-50/80 border border-amber-200/80 rounded-[24px] p-5 flex items-start gap-3.5 shadow-sm">
+        <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 leading-relaxed font-medium">
+          <strong>Consejo Kit:</strong> marca cada casilla a medida que llenas el carrito, y guarda esta lista — la volverás a usar cada semana con las recetas del Kit.
+        </p>
+      </div>
 
       {/* Airfryer Pantry Essentials Guide */}
       <div className="bg-white border border-slate-100/90 rounded-[32px] p-6 sm:p-8 space-y-4 shadow-sm">
@@ -291,3 +338,4 @@ export const ShoppingList: React.FC<ShoppingListProps> = ({
     </div>
   );
 };
+

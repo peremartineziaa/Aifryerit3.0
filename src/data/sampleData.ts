@@ -174,3 +174,86 @@ export const AIRFRYER_PANTRY_ESSENTIALS = [
   { name: 'Eritritol o Estevia líquida pura', category: 'Endulzantes', note: 'Sustituto 0 calorías del azúcar para postres y bebidas.' },
   { name: 'Especias fit: Ajo en polvo, cebolla, pimentón de la Vera, orégano, canela', category: 'Sabor', note: 'Aportan sabor gourmet sin añadir calorías.' },
 ];
+
+export const KIT_OFFICIAL_SHOPPING_LIST: ShoppingItem[] = [
+  // 🥩 CARNES Y AVES
+  { id: 'kit_1', name: 'Pechugas de pollo', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_2', name: 'Muslos de pollo', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_3', name: 'Alitas de pollo', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_4', name: 'Pechuga de pavo (filetes y entera)', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_5', name: 'Carne picada de pavo', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_6', name: 'Carne picada magra', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_7', name: 'Solomillo de cerdo', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_8', name: 'Chuletas de cordero', category: 'carnes', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🐟 PESCADOS Y MARISCOS
+  { id: 'kit_9', name: 'Lomos de salmón', category: 'pescados', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_10', name: 'Lomos de merluza', category: 'pescados', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_11', name: 'Filetes de lubina', category: 'pescados', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_12', name: 'Lomos de bacalao desalado', category: 'pescados', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_13', name: 'Gambas peladas', category: 'pescados', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_14', name: 'Atún en conserva al natural', category: 'pescados', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🥚 HUEVOS Y LÁCTEOS
+  { id: 'kit_15', name: 'Huevos', category: 'lacteos', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_16', name: 'Queso rallado bajo en grasa', category: 'lacteos', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_17', name: 'Queso fresco batido', category: 'lacteos', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_18', name: 'Queso feta', category: 'lacteos', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_19', name: 'Queso batido 0%', category: 'lacteos', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_20', name: 'Yogur natural', category: 'lacteos', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🫘 LEGUMBRES Y OTROS FRESCOS
+  { id: 'kit_21', name: 'Garbanzos cocidos', category: 'legumbres', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_22', name: 'Tofu firme', category: 'legumbres', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_23', name: 'Patata cocida', category: 'legumbres', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🥦 FRUTAS Y VERDURAS
+  { id: 'kit_24', name: 'Calabacín', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_25', name: 'Cebolla', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_26', name: 'Pimiento rojo y verde', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_27', name: 'Espinacas frescas', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_28', name: 'Berenjenas', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_29', name: 'Champiñones portobello', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_30', name: 'Limones', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_31', name: 'Ajo fresco', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_32', name: 'Perejil, romero y eneldo frescos', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_33', name: 'Rúcula', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_34', name: 'Tomate cherry y triturado natural', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_35', name: 'Manzanas', category: 'frutas', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_36', name: 'Plátanos maduros', category: 'frutas', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_37', name: 'Peras conferencia', category: 'frutas', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_38', name: 'Arándanos y frutos rojos', category: 'frutas', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_39', name: 'Piña natural', category: 'frutas', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_40', name: 'Menta fresca', category: 'verduras', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🌾 PANADERÍA Y CEREALES
+  { id: 'kit_41', name: 'Pan rallado y panko', category: 'panaderia', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_42', name: 'Harina de trigo', category: 'panaderia', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_43', name: 'Harina de avena', category: 'panaderia', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_44', name: 'Copos de avena', category: 'panaderia', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_45', name: 'Tortillas de trigo integral', category: 'panaderia', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🧂 DESPENSA Y CONDIMENTOS
+  { id: 'kit_46', name: 'Aceite de oliva virgen extra', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_47', name: 'Salsa de soja', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_48', name: 'Mostaza de Dijon', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_49', name: 'Miel', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_50', name: 'Salsa picante tipo buffalo', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_51', name: 'Semillas de sésamo', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_52', name: 'Maicena', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_53', name: 'Cacao puro en polvo', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_54', name: 'Chips de chocolate negro 85%', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_55', name: 'Levadura química', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_56', name: 'Esencia de vainilla', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_57', name: 'Eritritol o edulcorante', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_58', name: 'Vino tinto (opcional)', category: 'despensa', checked: false, recipeSource: 'Kit de Inicio' },
+
+  // 🌿 ESPECIAS BÁSICAS
+  { id: 'kit_59', name: 'Pimentón dulce y ahumado', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_60', name: 'Orégano', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_61', name: 'Comino', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_62', name: 'Canela', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_63', name: 'Nuez moscada', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_64', name: 'Ajo y cebolla en polvo', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+  { id: 'kit_65', name: 'Sal y pimienta', category: 'especias', checked: false, recipeSource: 'Kit de Inicio' },
+];

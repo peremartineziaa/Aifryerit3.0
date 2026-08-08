@@ -1,6 +1,6 @@
 import React from 'react';
 import { Recipe } from '../types';
-import { Flame, Thermometer, Clock, Plus, Check, Heart, ShieldCheck, ChefHat } from 'lucide-react';
+import { Flame, Thermometer, Clock, Plus, Check, Heart, ShieldCheck, ChefHat, Lock } from 'lucide-react';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -11,6 +11,8 @@ interface RecipeCardProps {
   onToggleFavorite?: (recipeId: string) => void;
   isAddedToShopping?: boolean;
   onStartCooking?: (recipe: Recipe) => void;
+  isLockedInDemo?: boolean;
+  onUnlockClick?: () => void;
 }
 
 export const RecipeCard: React.FC<RecipeCardProps> = ({
@@ -22,49 +24,68 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   onToggleFavorite,
   isAddedToShopping = false,
   onStartCooking,
+  isLockedInDemo = false,
+  onUnlockClick,
 }) => {
+  const handleCardClick = () => {
+    if (isLockedInDemo && onUnlockClick) {
+      onUnlockClick();
+    } else {
+      onSelect(recipe);
+    }
+  };
+
   return (
-    <div className="group bg-white border border-slate-100/90 rounded-[28px] p-4 shadow-sm hover:shadow-md hover:border-green-300 transition-all duration-300 flex flex-col h-full">
+    <div className={`group bg-white border border-slate-100/90 rounded-[28px] p-4 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full ${isLockedInDemo ? 'hover:border-amber-400' : 'hover:border-green-300'}`}>
       
       {/* Recipe Image & Overlay Badges */}
-      <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden cursor-pointer shadow-inner mb-3" onClick={() => onSelect(recipe)}>
+      <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden cursor-pointer shadow-inner mb-3" onClick={handleCardClick}>
         <img
           src={recipe.imageUrl}
           alt={recipe.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className={`w-full h-full object-cover transition-transform duration-500 ${isLockedInDemo ? 'filter brightness-90 group-hover:scale-102' : 'group-hover:scale-105'}`}
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent" />
 
-        {/* Bonus Badge */}
-        {recipe.isBonus1Dinner && (
-          <div className="absolute top-3 left-3 bg-orange-500 text-white font-bold text-[10px] uppercase px-3 py-1 rounded-full shadow flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3" />
-            <span>BONUS 1: 21 CENAS</span>
+        {/* Locked Demo Badge vs Bonus Badges */}
+        {isLockedInDemo ? (
+          <div className="absolute top-3 right-3 bg-slate-900/90 text-amber-300 font-extrabold text-[10px] uppercase px-2.5 py-1 rounded-full backdrop-blur-md flex items-center gap-1 border border-amber-400/40 shadow-md">
+            <Lock className="w-3 h-3 text-amber-400" />
+            <span>VIP (29€)</span>
           </div>
-        )}
-        {recipe.isBonus2Dessert && (
-          <div className="absolute top-3 left-3 bg-pink-500 text-white font-bold text-[10px] uppercase px-3 py-1 rounded-full shadow flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3" />
-            <span>BONUS 2: POSTRE FIT</span>
-          </div>
-        )}
+        ) : (
+          <>
+            {recipe.isBonus1Dinner && (
+              <div className="absolute top-3 left-3 bg-orange-500 text-white font-bold text-[10px] uppercase px-3 py-1 rounded-full shadow flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                <span>BONUS 1: 21 CENAS</span>
+              </div>
+            )}
+            {recipe.isBonus2Dessert && (
+              <div className="absolute top-3 left-3 bg-pink-500 text-white font-bold text-[10px] uppercase px-3 py-1 rounded-full shadow flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                <span>BONUS 2: POSTRE FIT</span>
+              </div>
+            )}
 
-        {/* Favorite Button */}
-        {onToggleFavorite && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite(recipe.id);
-            }}
-            className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition-all ${
-              isFavorite
-                ? 'bg-rose-500 text-white scale-110 shadow-md'
-                : 'bg-white/80 text-slate-600 hover:bg-white hover:text-rose-500'
-            }`}
-          >
-            <Heart className="w-4 h-4 fill-current" />
-          </button>
+            {/* Favorite Button */}
+            {onToggleFavorite && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite(recipe.id);
+                }}
+                className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition-all ${
+                  isFavorite
+                    ? 'bg-rose-500 text-white scale-110 shadow-md'
+                    : 'bg-white/80 text-slate-600 hover:bg-white hover:text-rose-500'
+                }`}
+              >
+                <Heart className="w-4 h-4 fill-current" />
+              </button>
+            )}
+          </>
         )}
 
         {/* Bottom Airfryer Settings Pill Overlay */}
@@ -99,7 +120,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           </div>
 
           <h3 
-            onClick={() => onSelect(recipe)} 
+            onClick={handleCardClick} 
             className="text-base font-extrabold text-slate-900 hover:text-green-600 transition-colors line-clamp-1 cursor-pointer"
           >
             {recipe.title}
@@ -131,36 +152,48 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           <div className="space-y-2">
             {onStartCooking && (
               <button
-                onClick={() => onStartCooking(recipe)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition-all scale-101 hover:scale-102"
+                onClick={isLockedInDemo ? handleCardClick : () => onStartCooking(recipe)}
+                className={`w-full py-2.5 px-3 rounded-2xl text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition-all scale-101 hover:scale-102 ${
+                  isLockedInDemo
+                    ? 'bg-slate-800 hover:bg-slate-900'
+                    : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600'
+                }`}
               >
-                <ChefHat className="w-3.5 h-3.5 fill-current" />
-                <span>COCINAR AHORA</span>
+                {isLockedInDemo ? <Lock className="w-3.5 h-3.5 text-amber-400" /> : <ChefHat className="w-3.5 h-3.5 fill-current" />}
+                <span>{isLockedInDemo ? 'DESBLOQUEAR RECETA (29€)' : 'COCINAR AHORA'}</span>
               </button>
             )}
 
             <div className="grid grid-cols-2 gap-2">
               {onAddToMenu && (
                 <button
-                  onClick={() => onAddToMenu(recipe)}
+                  onClick={isLockedInDemo ? handleCardClick : () => onAddToMenu(recipe)}
                   className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Al Menú</span>
+                  {isLockedInDemo ? <Lock className="w-3 h-3 text-amber-400" /> : <Plus className="w-3.5 h-3.5" />}
+                  <span>{isLockedInDemo ? 'Bloqueada' : 'Al Menú'}</span>
                 </button>
               )}
 
               {onAddToShopping && (
                 <button
-                  onClick={() => onAddToShopping(recipe)}
+                  onClick={isLockedInDemo ? handleCardClick : () => onAddToShopping(recipe)}
                   className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-2xl text-xs font-bold border transition-all ${
-                    isAddedToShopping
+                    isLockedInDemo
+                      ? 'bg-slate-100 text-slate-600 border-slate-200'
+                      : isAddedToShopping
                       ? 'bg-green-100 text-green-800 border-green-300'
                       : 'bg-green-500 hover:bg-green-600 text-white border-transparent shadow-sm'
                   }`}
                 >
-                  {isAddedToShopping ? <Check className="w-3.5 h-3.5 text-green-700" /> : <Plus className="w-3.5 h-3.5" />}
-                  <span>{isAddedToShopping ? 'En Compra' : 'A Compra'}</span>
+                  {isLockedInDemo ? (
+                    <Lock className="w-3 h-3 text-amber-600" />
+                  ) : isAddedToShopping ? (
+                    <Check className="w-3.5 h-3.5 text-green-700" />
+                  ) : (
+                    <Plus className="w-3.5 h-3.5" />
+                  )}
+                  <span>{isLockedInDemo ? 'VIP' : isAddedToShopping ? 'En Compra' : 'A Compra'}</span>
                 </button>
               )}
             </div>
