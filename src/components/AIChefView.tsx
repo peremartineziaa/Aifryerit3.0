@@ -95,7 +95,7 @@ export const AIChefView: React.FC<AIChefViewProps> = ({
     try {
       const allIngs = [...selectedIngredients, customIngredients].filter(Boolean).join(', ');
 
-      const res = await fetch('/api/ai-chef', {
+      const res = await fetch('https://airfryerfit-api.onrender.com/api/ai-chef', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
