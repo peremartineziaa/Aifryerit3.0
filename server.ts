@@ -18,6 +18,7 @@ async function startServer() {
   app.post("/api/ai-chef", async (req, res) => {
     try {
       const apiKey = process.env.GEMINI_API_KEY;
+
       if (!apiKey) {
         return res.status(500).json({
           error: "API Key GEMINI_API_KEY no está configurada.",
@@ -28,13 +29,16 @@ async function startServer() {
 
       const ai = new GoogleGenAI({ apiKey });
 
-      let systemInstruction = `Eres Chef AirFryFit, un nutricionista experto y chef especializado en recetas de freidora de aire (Airfryer) para perder peso y grasa corporal de forma saludable.
+      const systemInstruction = `Eres Chef AirFryFit, un nutricionista experto y chef especializado en recetas de freidora de aire (Airfryer) para perder peso y grasa corporal de forma saludable.
+
 Tus respuestas deben estar siempre en español, con un tono motivador, profesional y cercano.
-Proporciona instrucciones detalladas con temperatura exacta en Celsius (°C), tiempo en minutos, trucos para crujiente sin aceite y desglose de macronutrientes (Calorías, Proteínas, Carbohidratos, Grasas).`;
+
+Proporciona instrucciones detalladas con temperatura exacta en Celsius (°C), tiempo en minutos, trucos para conseguir una textura crujiente sin exceso de aceite y desglose de macronutrientes (Calorías, Proteínas, Carbohidratos, Grasas).`;
 
       let userPrompt = prompt;
+
       if (type === "recipe_from_ingredients") {
-userPrompt = `Crea una receta saludable y deliciosa para Airfryer usando EXCLUSIVAMENTE los ingredientes disponibles indicados por el usuario.
+        userPrompt = `Crea una receta saludable y deliciosa para Airfryer usando EXCLUSIVAMENTE los ingredientes disponibles indicados por el usuario.
 
 INGREDIENTES DISPONIBLES:
 ${ingredients}
@@ -73,27 +77,44 @@ Nombre, descripción, tiempo de preparación, tiempo de cocción, temperatura, c
 
 Devuelve ÚNICAMENTE JSON válido con los campos:
 title, description, prepTimeMinutes, cookTimeMinutes, temperatureCelsius, calories, proteinGrams, carbsGrams, fatGrams, ingredients, instructions, chefTip.`;
+      }
 
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
         contents: userPrompt,
         config: {
           systemInstruction,
-          responseMimeType: type === "recipe_from_ingredients" ? "application/json" : "text/plain",
+          responseMimeType:
+            type === "recipe_from_ingredients"
+              ? "application/json"
+              : "text/plain",
         },
       });
 
       const text = response.text;
+
       if (type === "recipe_from_ingredients") {
         try {
           const parsed = JSON.parse(text || "{}");
-          return res.json({ success: true, recipe: parsed });
+          return res.json({
+            success: true,
+            recipe: parsed,
+          });
         } catch {
-          return res.json({ success: true, textResponse: text });
+          return res.json({
+            success: true,
+            textResponse: text,
+          });
         }
       }
 
-      return res.json({ success: true, textResponse: text });
+      return res.json({
+        success: true,
+        textResponse: text,
+      });
     } catch (err: any) {
       console.error("Error in AI Chef:", err);
+
       return res.status(500).json({
         error: "Error procesando la solicitud con el Chef AI",
         message: err.message || String(err),
@@ -104,13 +125,18 @@ title, description, prepTimeMinutes, cookTimeMinutes, temperatureCelsius, calori
   // Vite middleware for dev or static serving for prod
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+      },
       appType: "spa",
     });
+
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
+
     app.use(express.static(distPath));
+
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
