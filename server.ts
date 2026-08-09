@@ -34,13 +34,46 @@ Proporciona instrucciones detalladas con temperatura exacta en Celsius (°C), ti
 
       let userPrompt = prompt;
       if (type === "recipe_from_ingredients") {
-        userPrompt = `Crea una receta rápida y deliciosa para Airfryer orientada a la pérdida de peso usando estos ingredientes disponibles: ${ingredients}. Límite aproximado de calorías: ${calories || 400} kcal. Incluye: Nombre, Tiempo (min), Temp (°C), Calorías, Proteínas, Carbos, Grasas, Ingredientes exactos, Pasos detallados y un Consejo del Chef. Devuelve la respuesta en JSON estructurado con los campos: title, description, prepTimeMinutes, cookTimeMinutes, temperatureCelsius, calories, proteinGrams, carbsGrams, fatGrams, ingredients (array de strings), instructions (array de strings), chefTip.`;
-      } else if (type === "custom_menu") {
-        userPrompt = `Genera un menú semanal equilibrado de 7 días (Lunes a Domingo) para freidora de aire enfocado en adelgazar. Preferencias/Restricciones: ${prompt || "Equilibrado bajo en calorías"}. Incluye Desayuno, Comida, Cena y Snack para cada día con calorías aproximadas. Devuelve un formato claro y estructurado en Markdown.`;
-      }
+userPrompt = `Crea una receta saludable y deliciosa para Airfryer usando EXCLUSIVAMENTE los ingredientes disponibles indicados por el usuario.
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+INGREDIENTES DISPONIBLES:
+${ingredients}
+
+REGLA ABSOLUTA:
+NO puedes añadir ningún ingrediente que no esté en la lista proporcionada.
+
+NO añadas pescado, marisco, carne, pollo, huevos, queso, lácteos, arroz, pasta, pan, legumbres, frutas o verduras que el usuario NO haya indicado.
+
+Solo puedes utilizar como ingredientes auxiliares:
+- sal
+- pimienta
+- especias
+- hierbas aromáticas
+- ajo
+- agua
+- una pequeña cantidad de aceite de oliva
+
+Si el usuario indica "verduras", puedes utilizar verduras, pero no añadas ninguna proteína que no haya indicado.
+
+NO sustituyas ingredientes.
+NO inventes ingredientes.
+NO añadas pescado salvo que el usuario indique pescado.
+NO añadas marisco salvo que el usuario indique marisco.
+
+Antes de responder, comprueba que TODOS los ingredientes de la receta pertenecen a la lista proporcionada o a los auxiliares permitidos.
+
+Si hay pocos ingredientes, crea una receta sencilla utilizando únicamente esos ingredientes.
+
+La receta debe estar orientada a pérdida de peso y preparada para Airfryer.
+
+Límite aproximado de calorías: ${calories || 400} kcal.
+
+Incluye:
+Nombre, descripción, tiempo de preparación, tiempo de cocción, temperatura, calorías, proteínas, carbohidratos, grasas, ingredientes exactos, pasos detallados y consejo del Chef.
+
+Devuelve ÚNICAMENTE JSON válido con los campos:
+title, description, prepTimeMinutes, cookTimeMinutes, temperatureCelsius, calories, proteinGrams, carbsGrams, fatGrams, ingredients, instructions, chefTip.`;
+}
         contents: userPrompt,
         config: {
           systemInstruction,
