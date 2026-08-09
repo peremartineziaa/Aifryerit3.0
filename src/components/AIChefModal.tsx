@@ -148,12 +148,7 @@ export const AIChefModal: React.FC<AIChefModalProps> = ({
           ],
         };
 
-        // Pick 2 complementing recipes from local DB to always show 3 recipes
-        const complements = existingRecipes
-          .filter((r) => r.id !== primaryAiRecipe.id)
-          .slice(0, 2);
-
-        results = [primaryAiRecipe, ...complements];
+      results = [primaryAiRecipe];
         onAddCustomRecipe(primaryAiRecipe);
       } else {
         // Fallback: pick top 3 matching recipes from local data
