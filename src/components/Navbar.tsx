@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../assets/images/airfryfit_logo_1786197820048.jpg';
 import { 
   Home,
   Utensils, 
@@ -103,10 +104,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-slate-200/80 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center p-0.5">
                 <img 
-                  src="/src/assets/images/airfryfit_logo_1786197820048.jpg" 
-                  alt="AirFryFit Logo" 
-                  className="w-full h-full object-cover rounded-lg"
-                  referrerPolicy="no-referrer"
+                <img 
+  src={logo} 
+  alt="AirFryFit Logo" 
+  className="w-full h-full object-cover rounded-lg"
+/>
                 />
               </div>
               <div>
