@@ -73,7 +73,7 @@ Nombre, descripción, tiempo de preparación, tiempo de cocción, temperatura, c
 
 Devuelve ÚNICAMENTE JSON válido con los campos:
 title, description, prepTimeMinutes, cookTimeMinutes, temperatureCelsius, calories, proteinGrams, carbsGrams, fatGrams, ingredients, instructions, chefTip.`;
-}
+
         contents: userPrompt,
         config: {
           systemInstruction,
