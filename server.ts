@@ -100,7 +100,7 @@ title, description, prepTimeMinutes, cookTimeMinutes, temperatureCelsius, calori
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         contents: userPrompt,
         config: {
           systemInstruction,
