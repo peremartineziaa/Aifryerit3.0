@@ -140,7 +140,7 @@ export const AIChefView: React.FC<AIChefViewProps> = ({
         };
 
         const complements = RECIPES_DATA.slice(0, 2);
-        results = [primaryAiRecipe, ...complements];
+        results = [primaryAiRecipe];
         onAddCustomRecipe(primaryAiRecipe);
       } else {
         results = RECIPES_DATA.slice(0, 3);
