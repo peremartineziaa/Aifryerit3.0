@@ -108,48 +108,56 @@ export const AIChefView: React.FC<AIChefViewProps> = ({
       const data = await res.json();
       let results: Recipe[] = [];
 
-      if (data.recipe) {
-        const primaryAiRecipe: Recipe = {
-          id: 'ai_' + Date.now(),
-          title: data.recipe.title || 'Receta Especial Chef IA',
-          description: data.recipe.description || 'Especialmente diseñada con tus ingredientes para Airfryer',
-          category: selectedStyle.includes('Dulce') ? 'postres' : 'comidas',
-          imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
-          prepTimeMinutes: 5,
-          cookTimeMinutes: selectedTime,
-          temperatureCelsius: data.recipe.temperatureCelsius || 190,
-          calories: data.recipe.calories || 380,
-          proteinGrams: data.recipe.proteinGrams || 32,
-          carbsGrams: data.recipe.carbsGrams || 14,
-          fatGrams: data.recipe.fatGrams || 10,
-          servings: 1,
-          tags: ['Chef IA', 'A Medida', selectedStyle],
-          difficulty: 'Fácil',
-          airfryerTip: data.recipe.chefTip || 'Asegúrate de no sobrecargar la cesta.',
-          ingredients: (data.recipe.ingredients || ['180g pechuga', '1 cda aceite']).map((i: string) => ({
-            name: typeof i === 'string' ? i : 'Ingrediente',
-            amount: 1,
-            unit: 'ración',
-            category: 'despensa',
-          })),
-          instructions: data.recipe.instructions || [
-            'Precalienta la freidora de aire a ' + (data.recipe.temperatureCelsius || 190) + '°C durante 3 minutos.',
-            'Azona tus ingredientes con especias al gusto.',
-            'Cocina durante ' + selectedTime + ' minutos girando a mitad de cocción.'
-          ],
-        };
+     if (data.recipes && Array.isArray(data.recipes) && data.recipes.length === 3) {
+  results = data.recipes.map((recipe: any, index: number): Recipe => ({
+    id: 'ai_' + Date.now() + '_' + index,
+    title: recipe.title || `Receta Chef IA ${index + 1}`,
+    description:
+      recipe.description ||
+      'Receta diseñada especialmente con tus ingredientes para Airfryer.',
+    category: selectedStyle.includes('Dulce') ? 'postres' : 'comidas',
+    imageUrl:
+      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    prepTimeMinutes: recipe.prepTimeMinutes || 5,
+    cookTimeMinutes: recipe.cookTimeMinutes || selectedTime,
+    temperatureCelsius: recipe.temperatureCelsius || 190,
+    calories: recipe.calories || 380,
+    proteinGrams: recipe.proteinGrams || 30,
+    carbsGrams: recipe.carbsGrams || 20,
+    fatGrams: recipe.fatGrams || 10,
+    servings: 1,
+    tags: ['Chef IA', 'A Medida', selectedStyle],
+    difficulty: 'Fácil',
+    airfryerTip:
+      recipe.chefTip || 'Asegúrate de no sobrecargar la cesta.',
+    ingredients: (recipe.ingredients || []).map((i: string) => ({
+      name: typeof i === 'string' ? i : 'Ingrediente',
+      amount: 1,
+      unit: 'ración',
+      category: 'despensa',
+    })),
+    instructions: recipe.instructions || [
+      `Precalienta la Airfryer a ${recipe.temperatureCelsius || 190}°C durante 3 minutos.`,
+      'Añade los ingredientes y cocina según las indicaciones.',
+      `Cocina durante ${recipe.cookTimeMinutes || selectedTime} minutos.`,
+    ],
+  }));
 
-        const complements = RECIPES_DATA.slice(0, 2);
-        results = [primaryAiRecipe];
-        onAddCustomRecipe(primaryAiRecipe);
-      } else {
-        results = RECIPES_DATA.slice(0, 3);
-      }
+  results.forEach((recipe) => {
+    onAddCustomRecipe(recipe);
+  });
+} else {
+  console.error('El Chef IA no ha devuelto exactamente 3 recetas:', data);
 
-      setMatchedRecipes(results);
-    } catch (err) {
-      console.error(err);
-      setMatchedRecipes(RECIPES_DATA.slice(0, 3));
+  results = [];
+}
+        
+
+       
+   } catch (err) {
+  console.error('Error generando recetas con Chef IA:', err);
+  setMatchedRecipes([]);
+}
     } finally {
       setLoading(false);
     }
