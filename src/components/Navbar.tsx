@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2.5 cursor-pointer group shrink-0"
             >
               <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-slate-200/80 shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center p-0.5">
-                <img 
+            
                 <img 
   src={logo} 
   alt="AirFryFit Logo" 
