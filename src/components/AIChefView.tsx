@@ -157,7 +157,7 @@ export const AIChefView: React.FC<AIChefViewProps> = ({
    } catch (err) {
   console.error('Error generando recetas con Chef IA:', err);
   setMatchedRecipes([]);
-}
+
     } finally {
       setLoading(false);
     }
